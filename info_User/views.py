@@ -1,10 +1,11 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from django.urls import reverse_lazy
 from os import environ
 from .models import InfoUser
 from .helper import send_email
-from .serializers import InfoSerializer
+from .serializers import InfoSerializer, UserSerializer
 
 # Create your views here.
 
@@ -33,4 +34,8 @@ class RegisterInfoView(generics.GenericAPIView):
         }
         send_email(data)
         return Response(user_data, status=status.HTTP_201_CREATED)
+    
+class UserListView(ListAPIView):
+    queryset = InfoUser.objects.all()
+    serializer_class = UserSerializer
     

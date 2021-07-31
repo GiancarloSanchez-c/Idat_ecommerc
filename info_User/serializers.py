@@ -18,6 +18,9 @@ class InfoSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return InfoUser.objects.create_user(**validated_data)
-
+class UserSerializer(serializers.Serializer):
+    class Meta:
+        model = InfoUser
+        fields = ['username','email','telefono','programa']
 class TokenVerifySerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255)
