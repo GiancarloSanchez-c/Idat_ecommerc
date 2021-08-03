@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from os import environ, path
+import os
 from django.contrib.messages import constants as messages
 from datetime import timedelta
 import dj_database_url
@@ -136,6 +137,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 MEDIA_ROOT = path.join(BASE_DIR, 'media/')
 MEDIA_URL='/media/'
 # Default primary key field type
