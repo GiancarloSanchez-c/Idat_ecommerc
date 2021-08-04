@@ -33,7 +33,9 @@ class RegisterInfoView(generics.GenericAPIView):
             'to': f'{user_object.email}'
         }
         send_email(data)
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response({
+            'success': 'Postulación registrada con éxito'
+        }, status=status.HTTP_201_CREATED)
     
 class UserListView(ListAPIView):
     queryset = InfoUser.objects.all()

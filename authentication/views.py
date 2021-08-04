@@ -39,8 +39,10 @@ class RegisterView(generics.GenericAPIView):
             'to': f'{user_object.email}'
         }
         send_email(data)
-        return Response(user_data, status=status.HTTP_201_CREATED)
-
+        return Response({
+            'success': 'Usuario registrado correctamente'
+        }, status=status.HTTP_201_CREATED)
+        
 class EmailVerifyView(views.APIView):
     serializer_class = EmailVerifySerializer
 
@@ -91,7 +93,7 @@ class LogoutView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({
-            'success': 'Se cerro la sesión'
+            'success': 'Sesión Finalizada con éxito'
         }, status=status.HTTP_200_OK)
 
 class ResetPasswordView(generics.GenericAPIView):
@@ -114,12 +116,12 @@ class ResetPasswordView(generics.GenericAPIView):
             
             data = {
                 'subject': 'Cambiar Contraseña',
-                'body': f'Hola {user.username}, usa este link para resetear tu contraseña {url}',
+                'body': f'Hola {user.username}, usa este link para cambiar su contraseña {url}',
                 'to': user.email
             }
             send_email(data)
         return Response({
-            'success': 'El correo fue enviado'
+            'success': 'Se envió el correo con éxito para el cambio de su contraseña.'
         }, status=status.HTTP_200_OK)
 
 class ResetPasswordCheckView(generics.GenericAPIView):
@@ -149,5 +151,5 @@ class PasswordChangeView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({
-            'success': 'Se cambio la contraseña'
+            'success': 'Se cambió la contraseña con éxito'
         }, status=status.HTTP_200_OK)
