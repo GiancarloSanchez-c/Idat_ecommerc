@@ -32,6 +32,13 @@ class CursoViewSet(viewsets.ModelViewSet):
         return Response({
             'error': 'No existe ninguna información'
         }, status = status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self, request, pk=None):
+        if self.get_queryset(pk):
+            serializer = self.serializer_class(self.get_queryset(pk))
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'error':'No existe ninguna información'},status=status.HTTP_400_BAD_REQUEST)
+
 class HorarioCursoViewSet(viewsets.ModelViewSet):
     serializer_class = HorarioSerializer
     look_field= 'id'
