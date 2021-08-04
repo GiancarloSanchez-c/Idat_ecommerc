@@ -12,7 +12,7 @@ class InfoSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         username = attrs.get('username', '')
-        if not username.isalnum():
+        if username.isalnum():
             raise serializers.ValidationError(self.default_error_messages)
         return attrs
     
