@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'authentication',
     'cursos',
     'info_User',
+    'ecommerce',
 ]
 AUTH_USER_MODEL = 'authentication.user'
 

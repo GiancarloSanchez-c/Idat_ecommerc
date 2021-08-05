@@ -38,6 +38,7 @@ urlpatterns = [
     path('auth/',include('authentication.urls')),
     path('user_int/',include('info_User.urls')),
     path('cursos/',include('cursos.urls')), 
+    path('ecommerce/',include('ecommerce.urls')),
     path('',schema_view.with_ui('swagger', cache_timeout=0), name='schema_swagger_ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='redoc_ui'),
 ]
