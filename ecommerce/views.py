@@ -2,7 +2,6 @@ from django.shortcuts import render
 from cursos.models import Curso,Venta,Detalle_Venta
 from cursos.serializers import CursoSerializer, DetalleVentaSerializer
 from .models import Carrito
-from rest_framework.generics import ListAPIView
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -32,7 +31,7 @@ class HomeView(ListAPIView):
         context['checkout'] = carrito
         return context
     
-class CheckoutView(ListAPIView): 
+class CheckoutView(ViewSet): 
 
     def get_queryset(self):
         return Carrito.objects.filter(user=self.request.usuario).order_by('created_at')
