@@ -1,10 +1,10 @@
 from .models import Cupon, Venta, Detalle_Venta, Carrito
-from info_User.models import User
+from info_User.models import InfoUser
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = InfoUser
         fields = ('id','username', 'email')
 class AddCarritoComprasSerializer(serializers.ModelSerializer):
     class Meta:
