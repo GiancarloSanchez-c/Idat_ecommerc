@@ -70,7 +70,7 @@ class CantidadUpgradeView(ViewSet):
         return redirect(reverse_lazy('checkout'))
     
 class CantidadDowngradeView(ViewSet):
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         shopping_cart = Carrito.objects.get(pk=kwargs['pk'])
         if shopping_cart:
             if shopping_cart.quantity > 1:
