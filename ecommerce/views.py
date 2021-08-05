@@ -126,17 +126,10 @@ class PagoCheckout(ViewSet):
         return JsonResponse(data)
     
 class OrderView(ViewSet):
-    
-    #template_name = 'views/orders.html'  
-    #context_object_name = 'objects'
     def get_queryset(self):
         return Venta.objects.filter(user=self.request.user).all()
 
 class DetalleOrdenView(ViewSet):
-#    template_name = 'views/order_detail.html'
-#    context_object_name = 'objects'
-    serializer_class = DetalleVentaSerializer
-    
     def get_queryset(self):
         return Detalle_Venta.objects.filter(order__code=self.kwargs['codigo']).all()
 
