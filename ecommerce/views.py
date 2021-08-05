@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from cursos.models import Curso,Venta,Detalle_Venta
-from cursos.serializers import CursoSerializer, DetalleVentaSerializer
-from .models import Carrito
+from cursos.models import Curso
+from cursos.serializers import CursoSerializer
+from .models import Carrito,Venta,Detalle_Venta
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -69,7 +69,7 @@ class CantidadUpgradeView(ViewSet):
             carrito.save()
         return redirect(reverse_lazy('checkout'))
     
-class QuantityDowngradeView(ViewSet):
+class CantidadDowngradeView(ViewSet):
     def post(self, request, *args, **kwargs):
         shopping_cart = Carrito.objects.get(pk=kwargs['pk'])
         if shopping_cart:
