@@ -15,4 +15,4 @@ class CursoSerializer(serializers.ModelSerializer):
     detalle = DetalleSerializer()
     class Meta:
         model = Curso
-        fields = ['title','image','description_study','horario','detalle','description_plan_study','price','status']
+        fields = ['id','title','image','description_study','horario','detalle','description_plan_study','price','status']
