@@ -14,9 +14,10 @@ router.register('pago', PagoCheckout, basename="pago"),
 router.register('orden', OrderView, basename="orden"),
 router.register('orden/detalle', DetalleOrdenView, basename="detalle_orden"),
 
+router.register('', HomeView, basename="home"),
+router.register('checkout', CheckoutView, basename="checkout"),
+
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
-    path('checkout', CheckoutView.as_view(), name='checkout'),
     path('confirmation', ConfirmationAPIVIEW.as_view(), name='confirmation'),
 ]
 urlpatterns += router.urls

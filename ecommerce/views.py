@@ -18,7 +18,7 @@ from rest_framework.response import Response
 # Create your views here.
 
 
-class HomeView(ListAPIView):
+class HomeView(ViewSet):
     model = Curso
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
