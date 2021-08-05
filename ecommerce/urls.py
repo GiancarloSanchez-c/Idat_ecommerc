@@ -11,13 +11,11 @@ router.register('cantidad/down', CantidadDowngradeView, basename="cantidad_down"
 
 router.register('pago', PagoCheckout, basename="pago"),
 
-router.register('orden', OrderView, basename="orden"),
-router.register('orden/detalle', DetalleOrdenView, basename="detalle_orden"),
-
-router.register('', HomeView, basename="home"),
-router.register('checkout', CheckoutView, basename="checkout"),
-
 urlpatterns = [
+    path('', HomeView.as_view(), name='home'),
     path('confirmation', ConfirmationAPIVIEW.as_view(), name='confirmation'),
+    path('checkout', CheckoutView.as_view(), name='checkout'),
+    path('orden', OrderView.as_view(), name='pago'),
+    path('orden/detalle', DetalleOrdenView.as_view(), name='checkout'),
 ]
 urlpatterns += router.urls

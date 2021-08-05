@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from cursos.models import Curso
 from cursos.serializers import CursoSerializer
+from .serializers import VentaSerializer
 from .models import Carrito,Venta,Detalle_Venta
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -15,10 +16,11 @@ from .paypal import Order
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 # Create your views here.
 
 
-class HomeView(ViewSet):
+class HomeView(ListAPIView):
     model = Curso
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
@@ -31,7 +33,7 @@ class HomeView(ViewSet):
         context['checkout'] = carrito
         return context
     
-class CheckoutView(ViewSet): 
+class CheckoutView(ListAPIView): 
 
     def get_queryset(self):
         return Carrito.objects.filter(user=self.request.usuario).order_by('created_at')
@@ -124,11 +126,13 @@ class PagoCheckout(ViewSet):
         
         return JsonResponse(data)
     
-class OrderView(ViewSet):
+class OrderView(ListAPIView):
     def get_queryset(self):
         return Venta.objects.filter(user=self.request.user).all()
 
-class DetalleOrdenView(ViewSet):
+class DetalleOrdenView(ListAPIView):
+    serializer_class = VentaSerializer
+
     def get_queryset(self):
         return Detalle_Venta.objects.filter(order__code=self.kwargs['codigo']).all()
 
