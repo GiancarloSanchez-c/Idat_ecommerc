@@ -1,5 +1,5 @@
 from django.db import models
-from info_User.models import InfoUser
+from authentication.models import User
 from cursos.models import Curso
 
 # Create your models here.
@@ -22,7 +22,7 @@ class Carrito(models.Model):
     programa = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.SET_NULL)
     cantidad = models.IntegerField(default=1)
     precio = models.DecimalField(max_digits=6, decimal_places=2)
-    usuario = models.ForeignKey(InfoUser, null=True, blank=True, on_delete=models.SET_NULL)
+    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -34,7 +34,7 @@ class Carrito(models.Model):
 class Venta(models.Model):
     id = models.AutoField(primary_key=True)
     date_of_sale = models.DateField(auto_now_add=True)
-    postulante = models.ForeignKey(InfoUser, on_delete=models.CASCADE)
+    postulante = models.ForeignKey(User, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=200)
     cantidad = models.IntegerField(default=1)
     cupon = models.ForeignKey(Cupon, on_delete=models.SET_NULL, blank=True, null=True)
