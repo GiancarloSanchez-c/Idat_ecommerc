@@ -124,6 +124,7 @@ class PagoCheckout(ViewSet):
         return JsonResponse(data)
     
 class OrderView(ListAPIView):
+    serializer_class = VentaSerializer
     def get_queryset(self):
         return Venta.objects.filter(user=self.request.usuario).all()
 

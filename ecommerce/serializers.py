@@ -46,4 +46,3 @@ class DetalleVentaSerializer(serializers.ModelSerializer):
         model = Detalle_Venta
         fields = '__all__'
         
-
