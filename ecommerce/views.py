@@ -13,7 +13,7 @@ from django.http.response import JsonResponse
 from .paypal import Order
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework import generics
+from rest_framework import viewsets
 
 # Create your views here.
 
@@ -121,12 +121,12 @@ class PagoCheckout(ViewSet):
         
         return JsonResponse(data)
     
-class OrderView(generics.GenericAPIView):
+class OrderView(viewsets.ModelViewSet):
     serializer_class = VentaSerializer
     def get_queryset(self):
         return Venta.objects.filter(user=self.request.usuario).all()
 
-class DetalleOrdenView(generics.GenericAPIView):
+class DetalleOrdenView(viewsets.ModelViewSet):
     serializer_class = VentaSerializer
 
     def get_queryset(self):
