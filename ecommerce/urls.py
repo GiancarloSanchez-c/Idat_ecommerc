@@ -4,8 +4,6 @@ from .views import HomeView,AddCarritoComprasView,CantidadUpgradeView, CantidadD
 
 router = routers.DefaultRouter()
 
-#router.register('carrito/agregar', AddCarritoComprasView, basename="agregar_carrito"),
-
 router.register('cantidad/up', CantidadUpgradeView, basename="cantidad_up"),
 router.register('cantidad/down', CantidadDowngradeView, basename="cantidad_down"),
 router.register('confirmation', ConfirmationAPIVIEW, basename='confirmation'),

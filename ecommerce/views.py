@@ -4,8 +4,6 @@ from cursos.serializers import CursoSerializer
 from .serializers import VentaSerializer, DetalleVentaSerializer, DowngradeSerializer, UpgradeSerializer, CuponSerializer, AddCarritoComprasSerializer, AddCarritoComprasSerializer
 from .models import Carrito,Venta,Detalle_Venta
 from django.contrib import messages
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
 from django.db.models import F
 from rest_framework.viewsets import  ViewSet
 from rest_framework.permissions import IsAuthenticated 
@@ -13,10 +11,10 @@ from json import loads
 from .utils import random_code
 from django.http.response import JsonResponse
 from .paypal import Order
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework import generics
+
 # Create your views here.
 
 
@@ -123,12 +121,12 @@ class PagoCheckout(ViewSet):
         
         return JsonResponse(data)
     
-class OrderView(ListAPIView):
+class OrderView(generics.GenericAPIView):
     serializer_class = VentaSerializer
     def get_queryset(self):
         return Venta.objects.filter(user=self.request.usuario).all()
 
-class DetalleOrdenView(ListAPIView):
+class DetalleOrdenView(generics.GenericAPIView):
     serializer_class = VentaSerializer
 
     def get_queryset(self):
