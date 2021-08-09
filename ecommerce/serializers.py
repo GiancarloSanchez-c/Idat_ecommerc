@@ -35,7 +35,7 @@ class VentaSerializer(serializers.ModelSerializer):
     postulante_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='postulante')
     class Meta:
         model = Venta
-        fields = '__all__'
+        fields = ['id','postulante','postulante_id','codigo','precio','cupon_id','cupon']
 
 class DetalleVentaSerializer(serializers.ModelSerializer):
     venta = VentaSerializer(read_only=True)
@@ -44,5 +44,5 @@ class DetalleVentaSerializer(serializers.ModelSerializer):
     programa_id = serializers.PrimaryKeyRelatedField(queryset=Curso.objects.all(), source='programa')
     class Meta:
         model = Detalle_Venta
-        fields = '__all__'
+        fields = ['id','cantidad','venta_id','curso_id','precio']
         
