@@ -4,18 +4,18 @@ from .views import HomeView,AddCarritoComprasView,CantidadUpgradeView, CantidadD
 
 router = routers.DefaultRouter()
 
-router.register('carrito/agregar', AddCarritoComprasView, basename="agregar_carrito"),
+#router.register('carrito/agregar', AddCarritoComprasView, basename="agregar_carrito"),
 
 router.register('cantidad/up', CantidadUpgradeView, basename="cantidad_up"),
 router.register('cantidad/down', CantidadDowngradeView, basename="cantidad_down"),
-
+router.register('confirmation', ConfirmationAPIVIEW, basename='confirmation'),
 router.register('pago', PagoCheckout, basename="pago"),
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
-    path('confirmation', ConfirmationAPIVIEW.as_view(), name='confirmation'),
     path('checkout', CheckoutView.as_view(), name='checkout'),
     path('orden', OrderView.as_view(), name='pago'),
     path('orden/detalle', DetalleOrdenView.as_view(), name='checkout'),
+    path('carrito/agregar', AddCarritoComprasView.as_view(), name="agregar_carrito"),
 ]
 urlpatterns += router.urls

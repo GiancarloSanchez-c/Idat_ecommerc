@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from cursos.models import Curso
 from cursos.serializers import CursoSerializer
-from .serializers import VentaSerializer
+from .serializers import VentaSerializer, DetalleVentaSerializer, DowngradeSerializer, UpgradeSerializer, CuponSerializer, AddCarritoComprasSerializer, AddCarritoComprasSerializer
 from .models import Carrito,Venta,Detalle_Venta
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -16,12 +16,11 @@ from .paypal import Order
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 # Create your views here.
 
 
 class HomeView(ListAPIView):
-    model = Curso
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
 
@@ -34,44 +33,42 @@ class HomeView(ListAPIView):
         return context
     
 class CheckoutView(ListAPIView): 
-
+    serializer_class = AddCarritoComprasSerializer
     def get_queryset(self):
         return Carrito.objects.filter(user=self.request.usuario).order_by('created_at')
     
-class ConfirmationAPIVIEW(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'confirmation.html'
-
+class ConfirmationAPIVIEW(ViewSet):
     def get(self, request):
         queryset = Venta.objects.all()
         return Response({'confirmation': queryset})
     
     
-class AddCarritoComprasView(ViewSet):
-    def create(self, request, *args, **kwargs):
+class AddCarritoComprasView(CreateAPIView):
+    serializer_class = AddCarritoComprasSerializer
+    def post(self, request, *args, **kwargs):
         body = request.POST
-        curso_id = body['curso_id'] # Trae el id del curso
-        product_query = Curso.objects.get(id=curso_id)
+        programa_id = body['programa_id'] # Trae el id del curso
+        product_query = Curso.objects.get(id=programa_id)
         if product_query:
-            price = product_query.price
+            precio = product_query.precio
             try:
-                carrito = Carrito.objects.get(curso_id=curso_id, user=request.user) #Trae el curso detallado
+                carrito = Carrito.objects.get(programa_id=programa_id, user=request.usuario) 
                 messages.add_message(request, messages.ERROR, 'El producto ya se encuentra agregado')
             except Carrito.DoesNotExist:
-                carrito = Carrito(curso_id=curso_id, price=price, quantity=1, user=request.user)
+                carrito = Carrito(curso_id=programa_id, price=precio, quantity=1, user=request.usuario)
                 carrito.save()
                 messages.add_message(request, messages.SUCCESS, 'El producto se agrego al carrito')
-        return redirect(reverse_lazy('index')) # Redirecciona al menu
     
 class CantidadUpgradeView(ViewSet):
+    serializer_class = UpgradeSerializer
     def create(self, request, *args, **kwargs):
         carrito = Carrito.objects.get(pk=kwargs['pk'])
         if carrito:
             carrito.quantity = F('cantidad') + 1
-            carrito.save()
-        return redirect(reverse_lazy('checkout'))
+
     
 class CantidadDowngradeView(ViewSet):
+    serializer_class = DowngradeSerializer
     def create(self, request, *args, **kwargs):
         shopping_cart = Carrito.objects.get(pk=kwargs['pk'])
         if shopping_cart:
@@ -80,7 +77,7 @@ class CantidadDowngradeView(ViewSet):
                 shopping_cart.save()
             elif shopping_cart.quantity == 1:
                 shopping_cart.delete()
-        return redirect(reverse_lazy('checkout'))
+
     
 class PagoCheckout(ViewSet):
     
@@ -92,8 +89,8 @@ class PagoCheckout(ViewSet):
         body = loads(body_unicode)
         order_id = body['orderID']
 
-        carrito = Carrito.objects.filter(user=request.user).all()
-        total_price = round(sum(round(d.price * d.quantity, 2) for d in carrito), 2)
+        carrito = Carrito.objects.filter(user=request.usuario).all()
+        total_price = round(sum(round(d.precio * d.cantidad, 2) for d in carrito), 2)
 
         order = Order().get_order(order_id)
         order_price = float(order.result.purchase_units[0].amount.value)
@@ -111,13 +108,13 @@ class PagoCheckout(ViewSet):
     def _order_capture(self, order_id, order_price, request, carrito):
         order_capture = Order().capture_order(order_id, debug=True)
 
-        code = f'OC-{random_code(5)}'
-        order = Venta.objects.create(price=order_price, user=request.user, code=code)
+        codigo = f'OC-{random_code(5)}'
+        order = Venta.objects.create(price=order_price, user=request.usuario, code=codigo)
         if order:
             order_id = order.pk
             for value in carrito:
-                Detalle_Venta.objects.create(order_id=order_id, product_id=value.product.id, quantity=value.quantity, price=value.price)
-            Carrito.objects.filter(user=request.user).delete()
+                Detalle_Venta.objects.create(order_id=order_id, product_id=value.programa.id, quantity=value.cantidad, price=value.precio)
+            Carrito.objects.filter(user=request.usuario).delete()
 
         data = {
             'id': order_capture.result.id,
@@ -128,7 +125,7 @@ class PagoCheckout(ViewSet):
     
 class OrderView(ListAPIView):
     def get_queryset(self):
-        return Venta.objects.filter(user=self.request.user).all()
+        return Venta.objects.filter(user=self.request.usuario).all()
 
 class DetalleOrdenView(ListAPIView):
     serializer_class = VentaSerializer
