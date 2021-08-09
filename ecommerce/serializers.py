@@ -5,8 +5,9 @@ from cursos.serializers import CursoSerializer
 from cursos.models import Curso
 
 class UserSerializer(serializers.ModelSerializer):
-    model = User
-    fields = ['username','email']
+    class Meta:
+        model = User
+        fields = ['username','email']
 class AddCarritoComprasSerializer(serializers.ModelSerializer):
     programa=CursoSerializer(read_only=True)
     programa_id = serializers.PrimaryKeyRelatedField(queryset=Curso.objects.all(), source='curso') 
