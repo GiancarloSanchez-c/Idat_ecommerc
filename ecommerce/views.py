@@ -21,12 +21,9 @@ from rest_framework import viewsets
 class HomeView(ListAPIView):
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
-
     def get_context_data(self, **kwargs):
-        carrito = Carrito.objects.filter(user=self.request.user).count()
-        print(carrito)
+        carrito = Carrito.objects.filter(user=self.request.usuario).count()
         context = super().get_context_data(**kwargs)
-        print(context)
         context['checkout'] = carrito
         return context
     
@@ -70,10 +67,10 @@ class CantidadDowngradeView(ViewSet):
     def create(self, request, *args, **kwargs):
         shopping_cart = Carrito.objects.get(pk=kwargs['pk'])
         if shopping_cart:
-            if shopping_cart.quantity > 1:
-                shopping_cart.quantity = F('quantity') - 1
+            if shopping_cart.cantidad > 1:
+                shopping_cart.cantidad = F('cantidad') - 1
                 shopping_cart.save()
-            elif shopping_cart.quantity == 1:
+            elif shopping_cart.cantidad == 1:
                 shopping_cart.delete()
 
     
@@ -107,7 +104,7 @@ class PagoCheckout(ViewSet):
         order_capture = Order().capture_order(order_id, debug=True)
 
         codigo = f'OC-{random_code(5)}'
-        order = Venta.objects.create(price=order_price, user=request.usuario, code=codigo)
+        order = Venta.objects.create(price=order_price, user=request.postulante, code=codigo)
         if order:
             order_id = order.pk
             for value in carrito:
@@ -124,7 +121,7 @@ class PagoCheckout(ViewSet):
 class OrderView(viewsets.ModelViewSet):
     serializer_class = VentaSerializer
     def get_queryset(self):
-        return Venta.objects.filter(user=self.request.usuario).all()
+        return Venta.objects.filter(user=self.request.postulante).all()
 
 class DetalleOrdenView(viewsets.ModelViewSet):
     serializer_class = VentaSerializer
