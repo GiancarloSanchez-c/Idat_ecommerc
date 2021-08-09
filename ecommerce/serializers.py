@@ -4,6 +4,9 @@ from rest_framework import serializers
 from cursos.serializers import CursoSerializer
 from cursos.models import Curso
 
+class UserSerializer(serializers.ModelSerializer):
+    model = User
+    fields = ['username','email']
 class AddCarritoComprasSerializer(serializers.ModelSerializer):
     programa=CursoSerializer(read_only=True)
     programa_id = serializers.PrimaryKeyRelatedField(queryset=Curso.objects.all(), source='curso') 
@@ -28,7 +31,7 @@ class DowngradeSerializer(serializers.ModelSerializer):
 class VentaSerializer(serializers.ModelSerializer):
     cupon = CuponSerializer(read_only=True)
     cupon_id = serializers.PrimaryKeyRelatedField(queryset=Cupon.objects.all(), source='cupon')
-    postulante = User(read_only=True)
+    postulante = UserSerializer(read_only=True)
     postulante_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='postulante')
     class Meta:
         model = Venta
